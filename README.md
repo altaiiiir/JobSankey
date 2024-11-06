@@ -24,8 +24,8 @@ A web application built with Streamlit for tracking job applications and visuali
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/job-application-tracker.git
-   cd job-application-tracker
+   git clone https://github.com/yourusername/JobSankey.git
+   cd JobSankey
 2. Install the required packages:
    ```bash
    pip install -r requirements.txt
