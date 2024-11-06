@@ -9,7 +9,7 @@ A web application built with Streamlit for tracking job applications and visuali
 ## Features
 
 - **Add New Job Applications**: Quickly add a new job application with details like company name, application URL, date, and current stage.
-- **Track Progression**: Monitor each application's movement through stages such as "Applied," "Phone Screen," "Tech Screen," and more.
+- **Track Progression**: Monitor each application's movement through stages such as "Applied," "Phone Screen," "Tech Screen," the all too familiar "Ghosted," and more.
 - **Sankey Diagram Visualization**: View a Sankey diagram that dynamically adjusts based on your application data, showing the flow between stages and highlighting the most common transitions.
 - **Responsive Layout**: The interface is responsive, displaying job applications in rows of four and adjusting the input form for a cleaner, compact look.
 
