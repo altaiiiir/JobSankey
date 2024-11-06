@@ -1,0 +1,5 @@
+Name,Application URL,Date,Stage,Stage History
+Amazon,https://www.amazon.jobs/en/,2024-11-05,Rejected,"[{'stage': 'Applied', 'date': '2024-11-05'}, {'stage': 'Phone Screen', 'date': '2024-11-05'}, {'stage': 'Tech Screen', 'date': '2024-11-05'}, {'stage': 'Rejected', 'date': '2024-11-05'}]"
+Meta SDE 1,https://www.metacareers.com/,2024-11-05,Ghosted,"[{'stage': 'Applied', 'date': '2024-11-05'}, {'stage': 'Tech Screen', 'date': '2024-11-05'}, {'stage': 'Ghosted', 'date': '2024-11-05'}]"
+2sigma SDE 2,https://careers.twosigma.com/,2024-11-05,Rejected,"[{'stage': 'Applied', 'date': '2024-11-05'}, {'stage': 'Phone Screen', 'date': '2024-11-05'}, {'stage': 'Rejected', 'date': '2024-11-05'}]"
+Msft Senior Engineer,https://careers.microsoft.com/v2/global/en/home.html,2024-11-05,Final Round,"[{'stage': 'Applied', 'date': '2024-11-05'}, {'stage': 'Phone Screen', 'date': '2024-11-05'}, {'stage': 'Final Round', 'date': '2024-11-05'}]"
