@@ -5,11 +5,12 @@ from datetime import datetime
 import os
 
 # Set the page layout to wide
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Job Application Tracker", page_icon="📊", layout="wide")
 
 # Constants
 CSV_FILE = "job_applications.csv"
 DEFAULT_STAGES = ["Applied", "Ghosted", "Phone Screen", "Tech Screen", "Final Round", "Offer", "Rejected", "Withdrawn"]
+STAGE_COLORS = ["#6366F1", "#94A3B8", "#0EA5E9", "#14B8A6", "#F59E0B", "#22C55E", "#EF4444", "#A78BFA"]
 
 
 class JobApplication:
@@ -33,7 +34,7 @@ class JobApplication:
             col1.markdown(name_link, unsafe_allow_html=True)
 
             # Display date (non-editable)
-            col2.write(row_data["Date"])
+            col2.caption(row_data["Date"])
 
             new_stage = col3.selectbox(
                 "Stage",  # Accessible label for screen readers
@@ -65,7 +66,7 @@ class JobApplication:
             # Display stage history in timeline format
             stage_history = row_data.get("Stage History", [])
             timeline_text = " → ".join([f"{record['stage']} ({record['date']})" for record in stage_history])
-            st.write(timeline_text)
+            st.caption(timeline_text)
 
 
 class SankeyDiagram:
@@ -77,8 +78,6 @@ class SankeyDiagram:
         if not self.data.empty:
             # Define source-target mappings
             stage_index = {name: i for i, name in enumerate(self.stages)}
-            sources, targets, values = [], [], []
-
             # Count stage transitions based on each application's stage history
             transition_counts = {}
             for _, row in self.data.iterrows():
@@ -104,20 +103,29 @@ class SankeyDiagram:
             # Render the Sankey diagram with full lifecycle data
             fig = go.Figure(go.Sankey(
                 node=dict(
-                    pad=20,
-                    thickness=30,
-                    line=dict(color="black", width=0.5),
-                    label=self.stages
+                    pad=24,
+                    thickness=18,
+                    line=dict(width=0),
+                    label=self.stages,
+                    color=STAGE_COLORS,
+                    hovertemplate="%{label}<br>%{value} application(s)<extra></extra>"
                 ),
                 link=dict(
                     source=sources,
                     target=targets,
-                    value=values
+                    value=values,
+                    color=[self._with_alpha(STAGE_COLORS[s], 0.35) for s in sources],
+                    hovertemplate="%{source.label} → %{target.label}<br>%{value} application(s)<extra></extra>"
                 )
             ))
 
-            fig.update_layout(font_size=28, width=1000, height=900)
-            st.plotly_chart(fig, use_container_width=True)
+            fig.update_layout(font_size=14, height=600, margin=dict(l=0, r=0, t=16, b=16))
+            st.plotly_chart(fig, width="stretch")
+
+    @staticmethod
+    def _with_alpha(hex_color, alpha):
+        r, g, b = (int(hex_color[i:i + 2], 16) for i in (1, 3, 5))
+        return f"rgba({r}, {g}, {b}, {alpha})"
 
 
 class JobApplicationTracker:
@@ -158,10 +166,12 @@ class JobApplicationTracker:
         st.session_state["app_data"] = self.data.copy()
 
     def render(self):
-        st.title("Job Application Tracker with Sankey Diagram")
+        st.title("Job Application Tracker")
+        st.caption("Track every application and see how it moves through your pipeline.")
 
         # Arrange the input fields and button in a single row with multiple columns
-        col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 2, 1])
+        with st.container(border=True):
+            col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 2, 1])
 
         with col1:
             name = st.text_input("Application Name", placeholder="Application Name", label_visibility="collapsed")
@@ -186,22 +196,31 @@ class JobApplicationTracker:
 
         # Display tracked job applications if any entries exist
         if not st.session_state["app_data"].empty:
-            st.subheader("Tracked Job Applications")
             updated_data = st.session_state["app_data"]
 
-            # Display job applications in rows of 4
-            rows = [updated_data.iloc[i:i + 4] for i in range(0, len(updated_data), 4)]
-            for row_group in rows:
-                cols = st.columns(4)  # Create 4 columns per row
-                for i, row in enumerate(row_group.iterrows()):
-                    with cols[i]:  # Place each job application in a separate column
-                        job_application = JobApplication(row, DEFAULT_STAGES)
-                        job_application.render()
+            # Summary metrics
+            stage_counts = updated_data["Stage"].value_counts()
+            metric_cols = st.columns(4)
+            metric_cols[0].metric("Total", len(updated_data))
+            for metric_col, stage_name in zip(metric_cols[1:], ["Offer", "Rejected", "Ghosted"]):
+                metric_col.metric(stage_name, int(stage_counts.get(stage_name, 0)))
+
+            applications_tab, flow_tab = st.tabs(["Applications", "Flow"])
+
+            with applications_tab:
+                # Display job applications in rows of 4
+                rows = [updated_data.iloc[i:i + 4] for i in range(0, len(updated_data), 4)]
+                for row_group in rows:
+                    cols = st.columns(4)  # Create 4 columns per row
+                    for i, row in enumerate(row_group.iterrows()):
+                        with cols[i]:  # Place each job application in a separate column
+                            job_application = JobApplication(row, DEFAULT_STAGES)
+                            job_application.render()
 
             # Render the Sankey diagram if there are entries
-            #st.subheader("Application Flow Diagram (Sankey)")
-            sankey_diagram = SankeyDiagram(updated_data, DEFAULT_STAGES)
-            sankey_diagram.render()
+            with flow_tab:
+                sankey_diagram = SankeyDiagram(updated_data, DEFAULT_STAGES)
+                sankey_diagram.render()
 
 
 # Main execution
