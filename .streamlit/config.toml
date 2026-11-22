@@ -1,2 +1,18 @@
 [server]
 runOnSave = true
+
+[theme]
+primaryColor = "#6366F1"
+baseRadius = "large"
+font = "sans-serif"
+headingFont = "sans-serif"
+
+[theme.light]
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F4F5F9"
+textColor = "#1F2430"
+
+[theme.dark]
+backgroundColor = "#0F1117"
+secondaryBackgroundColor = "#1A1D27"
+textColor = "#E6E8EF"

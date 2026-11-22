@@ -37,5 +37,5 @@ A web application built with Streamlit for tracking job applications and visuali
 - Open the app in your browser (default: http://localhost:8501).
 - Enter job application details in the form at the top.
 - Click "Add Application" to save it to the tracker.
-- View each application's stage history by expanding its section.
-- Analyze the Sankey diagram at the bottom to see the flow of applications between stages.
+- Use the "Applications" tab to view each application's stage history by expanding its section.
+- Check the summary metrics (Total, Offer, Rejected, Ghosted), then open the "Flow" tab to see the Sankey diagram of applications between stages.
